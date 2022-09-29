@@ -15,7 +15,7 @@ import java.time.DayOfWeek
 import java.time.LocalDate
 
 abstract class UntestableViewModelLogic(
-    scopeProvider: ViewModel.() -> CoroutineScope = { viewModelScope },
+    scopeProvider: ViewModel.() -> CoroutineScope,
     val println: (Any?) -> Unit = ::println
 ) : ViewModel() {
     companion object {
@@ -46,8 +46,9 @@ abstract class UntestableViewModelLogic(
         }
     }
 
+    protected abstract fun today(): DayOfWeek
     protected fun showDialogLogic(getString: (Int) -> String, dialogShower: MyDialogShower) {
-        val today = LocalDate.now().dayOfWeek!!
+        val today = today()
         val todayString = when (today) {
             DayOfWeek.MONDAY -> getString(R.string.monday)
             DayOfWeek.TUESDAY -> getString(R.string.tuesday)
@@ -68,7 +69,7 @@ interface MyDialogShower {
 }
 
 
-class UntestableViewModel : UntestableViewModelLogic() {
+class UntestableViewModel : UntestableViewModelLogic({ viewModelScope }) {
     fun showDialog(context: Context) {
         showDialogLogic({ context.getString(it) }, object : MyDialogShower {
             val builder = AlertDialog.Builder(context)
@@ -82,4 +83,6 @@ class UntestableViewModel : UntestableViewModelLogic() {
             }
         })
     }
+
+    override fun today(): DayOfWeek = LocalDate.now().dayOfWeek!!
 }
