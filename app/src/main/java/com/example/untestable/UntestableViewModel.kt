@@ -16,7 +16,7 @@ import java.time.LocalDate
 
 abstract class UntestableViewModelLogic(
     scopeProvider: ViewModel.() -> CoroutineScope = { viewModelScope },
-    val println: (Any?) -> Unit = { kotlin.io.println(it) }
+    val println: (Any?) -> Unit = ::println
 ) : ViewModel() {
     companion object {
         val delayInterval: Long = 2000
