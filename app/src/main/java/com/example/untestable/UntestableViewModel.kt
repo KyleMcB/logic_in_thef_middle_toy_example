@@ -4,6 +4,7 @@ import android.app.AlertDialog
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -13,7 +14,7 @@ import kotlinx.coroutines.launch
 import java.time.DayOfWeek
 import java.time.LocalDate
 
-class UntestableViewModel : ViewModel() {
+abstract class UntestableViewModelLogic() : ViewModel() {
     private val _primes = MutableStateFlow(listOf(2, 3, 5))
     val primes = _primes.asStateFlow()
     val importantConstant = "!"
@@ -37,6 +38,9 @@ class UntestableViewModel : ViewModel() {
         }
     }
 
+}
+
+class UntestableViewModel : UntestableViewModelLogic() {
     fun showDialog(context: Context) {
         val today = LocalDate.now().dayOfWeek!!
         val todayString = when (today) {
