@@ -10,6 +10,8 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
+import java.time.DayOfWeek
+import java.time.LocalDate
 
 class UntestableViewModel : ViewModel() {
     private val _primes = MutableStateFlow(listOf(2, 3, 5))
@@ -36,8 +38,18 @@ class UntestableViewModel : ViewModel() {
     }
 
     fun showDialog(context: Context) {
+        val today = LocalDate.now().dayOfWeek!!
+        val todayString = when (today) {
+            DayOfWeek.MONDAY -> context.getString(R.string.monday)
+            DayOfWeek.TUESDAY -> context.getString(R.string.tuesday)
+            DayOfWeek.WEDNESDAY -> context.getString(R.string.wednesday)
+            DayOfWeek.THURSDAY -> context.getString(R.string.thursday)
+            DayOfWeek.FRIDAY -> context.getString(R.string.friday)
+            DayOfWeek.SATURDAY -> context.getString(R.string.saturday)
+            DayOfWeek.SUNDAY -> context.getString(R.string.sunday)
+        }
         val builder = AlertDialog.Builder(context)
-        builder.setTitle("Hello!")
+        builder.setTitle(todayString)
         builder.show()
     }
 }
