@@ -46,20 +46,25 @@ abstract class UntestableViewModelLogic(
         }
     }
 
+    protected fun showDialogLogic(getString: (Int) -> String) {
+        val today = LocalDate.now().dayOfWeek!!
+        val todayString = when (today) {
+            DayOfWeek.MONDAY -> getString(R.string.monday)
+            DayOfWeek.TUESDAY -> getString(R.string.tuesday)
+            DayOfWeek.WEDNESDAY -> getString(R.string.wednesday)
+            DayOfWeek.THURSDAY -> getString(R.string.thursday)
+            DayOfWeek.FRIDAY -> getString(R.string.friday)
+            DayOfWeek.SATURDAY -> getString(R.string.saturday)
+            DayOfWeek.SUNDAY -> getString(R.string.sunday)
+        }
+    }
 }
+
 
 class UntestableViewModel : UntestableViewModelLogic() {
     fun showDialog(context: Context) {
-        val today = LocalDate.now().dayOfWeek!!
-        val todayString = when (today) {
-            DayOfWeek.MONDAY -> context.getString(R.string.monday)
-            DayOfWeek.TUESDAY -> context.getString(R.string.tuesday)
-            DayOfWeek.WEDNESDAY -> context.getString(R.string.wednesday)
-            DayOfWeek.THURSDAY -> context.getString(R.string.thursday)
-            DayOfWeek.FRIDAY -> context.getString(R.string.friday)
-            DayOfWeek.SATURDAY -> context.getString(R.string.saturday)
-            DayOfWeek.SUNDAY -> context.getString(R.string.sunday)
-        }
+        showDialogLogic({ context.getString(it) })
+
         val builder = AlertDialog.Builder(context)
         builder.setTitle(todayString)
         builder.show()
