@@ -14,19 +14,20 @@ import kotlinx.coroutines.launch
 import java.time.DayOfWeek
 import java.time.LocalDate
 
-abstract class UntestableViewModelLogic() : ViewModel() {
+abstract class UntestableViewModelLogic(scopeProvider: ViewModel.() -> CoroutineScope = { viewModelScope }) : ViewModel() {
     private val _primes = MutableStateFlow(listOf(2, 3, 5))
     val primes = _primes.asStateFlow()
     val importantConstant = "!"
+    private val scope = scopeProvider()
 
     init {
-        viewModelScope.launch {
+        scope.launch {
             while (isActive) {
                 delay(2000)
                 println("Hello$importantConstant")
             }
         }
-        viewModelScope.launch {
+        scope.launch {
             var numberToCheck = primes.value.last() + 1
             while (isActive) {
                 if (isPrime(numberToCheck)) {
