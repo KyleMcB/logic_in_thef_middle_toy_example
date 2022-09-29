@@ -1,7 +1,5 @@
 package com.example.untestable
 
-import android.app.AlertDialog
-import android.content.Context
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -19,21 +17,9 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.example.untestable.ui.theme.UntestableTheme
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.isActive
-import kotlinx.coroutines.launch
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
-import androidx.compose.runtime.remember
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.last
-import kotlinx.coroutines.flow.update
 
 abstract class MainActivityLogic : ComponentActivity()
 class MainActivity :MainActivityLogic() {
@@ -71,35 +57,6 @@ fun isPrime(number: Int): Boolean {
         index++
     }
     return true
-}
-
-class UntestableViewModel : ViewModel() {
-    private val _primes = MutableStateFlow(listOf(2,3,5))
-    val primes = _primes.asStateFlow()
-    val importantConstant = "!"
-    init {
-        viewModelScope.launch {
-            while (isActive) {
-                delay(2000)
-                println("Hello$importantConstant")
-            }
-        }
-        viewModelScope.launch {
-            var numberToCheck = primes.value.last() + 1
-            while (isActive) {
-                if (isPrime(numberToCheck)) {
-                    _primes.update { it + numberToCheck }
-                    delay(1000) //Good job cpu! You found a prime. Take a break.
-                }
-                numberToCheck++
-            }
-        }
-    }
-    fun showDialog(context: Context) {
-        val builder = AlertDialog.Builder(context)
-        builder.setTitle("Hello!")
-        builder.show()
-    }
 }
 
 
