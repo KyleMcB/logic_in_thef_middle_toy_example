@@ -13,7 +13,9 @@ import kotlinx.coroutines.launch
 import java.time.DayOfWeek
 import java.time.LocalDate
 
-class UntestableViewModel : ViewModel() {
+abstract class UntestableViewModelLogic() : ViewModel()
+
+class UntestableViewModel : UntestableViewModelLogic() {
     private val _primes = MutableStateFlow(listOf(2, 3, 5))
     val primes = _primes.asStateFlow()
     val importantConstant = "!"
